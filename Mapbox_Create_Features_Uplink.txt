@@ -1,50 +1,70 @@
 function consume(event) {
-  emit('forestuplink', event);
-  emit('sample', {topic: 'forestuplink', data: event});
-	var data_hex = event.data.payload_hex;
-	emit('log', {msg: data_hex});
+		emit('log', {msg: event});
 	
-	var hex = data_hex.toString();//force conversion
-	
-	//get pedestrians
-	var pedestrianStr = hex.substr(0,4);
-	var pedestrians = parseInt(pedestrianStr)
-	
-	//get bikes
-	var bikeStr = hex.substr(4,4);
-	var bikes = parseInt(bikeStr)
-	
-	//get horses
-	var horseStr = hex.substr(8,4);
-	var horses = parseInt(horseStr)
-	
-	//get timefrage
-	var timeframeStr = hex.substr(12,4);
-	var timeframeMins = parseInt(timeframeStr)
-	
-	//write to Mapbox
-	 emit('http', {
-  	url: 'https://api.mapbox.com/datasets/v1/chibi-totoro/cjivz7hqh2ur032ocsp3uha1z/features/ABCDE1530222815?access_token=XXXXXX',
-  	content: {
-  			type: 'Feature',
-  			id : 'ABCDE1530222815',
-  			geometry: {
-    			type: 'Point',
-    			coordinates: 
-      			[ 	8.49528, 47.38356  ]
-  			},
-  			properties: {
-    			time: 1530222815,
-    			pedestrians : pedestrians,
-					bikes : bikes,
-					horses : horses,
-					timeframe : timeframeMins
-  			}
-		},
-	method: 'PUT',
-	encoding: 'json'
-});
-	
+		var data_hex = event.sample.data.payload_hex;
 		
-	emit('log', {msg: pedestrians});
+
+		var hex = data_hex.toString();//force conversion
+
+		//get pedestrians
+		var pedestrianStr = hex.substr(0,4);
+		var pedestrians = parseInt(pedestrianStr)
+
+		//get bikes
+		var bikeStr = hex.substr(4,4);
+		var bikes = parseInt(bikeStr)
+
+		//get horses
+		var horseStr = hex.substr(8,4);
+		var horses = parseInt(horseStr)
+
+		//get timefrage
+		var timeframeStr = hex.substr(12,4);
+		var timeframeMins = parseInt(timeframeStr)
+
+		// get actual time in milliseconds 
+		var datum = new Date();
+		var now = datum.getTime();
+
+		//get device id
+		var deviceid= event.device.name;
+		emit('log', {msg: deviceid});
+
+		var uniqueKey = deviceid + now;
+
+		emit('log', {	pedestrians : pedestrians,
+								bikes : bikes,
+								horses : horses});
+	
+		if(pedestrians > 0 || bikes > 0 ||  horses > 0)
+		{
+
+				var url = 'https://api.mapbox.com/datasets/v1/chibi-totoro/cjivz7hqh2ur032ocsp3uha1z/features/'+uniqueKey+'?access_token=XXX'
+				//write to Mapbox
+				 emit('http', {
+					url: url,
+					content: {
+							type: 'Feature',
+							id : uniqueKey,
+							geometry: {
+								type: 'Point',
+								coordinates: 
+									[ 	8.49528, 47.38356  ]
+							},
+							properties: {
+								time: now,
+								pedestrians : pedestrians,
+								bikes : bikes,
+								horses : horses,
+								timeframe : timeframeMins
+							}
+					},
+				method: 'PUT',
+				encoding: 'json'
+			});
+	
+	}
+		
+	
+	
 }
