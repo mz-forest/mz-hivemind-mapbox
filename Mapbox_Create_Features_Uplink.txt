@@ -24,7 +24,7 @@ function consume(event) {
 	
 	//write to Mapbox
 	 emit('http', {
-  	url: 'https://api.mapbox.com/datasets/v1/chibi-totoro/cjivz7hqh2ur032ocsp3uha1z/features/ABCDE1530222815?access_token=sk.eyJ1IjoiY2hpYmktdG90b3JvIiwiYSI6ImNqaXcyYWhpbjE3bTUza3Ftb2dxYTlqOW0ifQ.HsYPZoByMkjAXHr4So8RRw',
+  	url: 'https://api.mapbox.com/datasets/v1/chibi-totoro/cjivz7hqh2ur032ocsp3uha1z/features/ABCDE1530222815?access_token=XXXXXX',
   	content: {
   			type: 'Feature',
   			id : 'ABCDE1530222815',
