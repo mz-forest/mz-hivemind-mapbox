@@ -1,0 +1,8 @@
+{
+	'port': 1,
+    'payload_hex': '000000000000000a'
+}
+
+https://api.hivemind.ch/v1/environments/2998d355ed1ee959/devices/02882b01eec26c42/down
+
+Header: API-Key  mit API-Key aus Hivemind App Credentials
