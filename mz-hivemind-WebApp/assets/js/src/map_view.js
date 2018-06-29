@@ -14,3 +14,26 @@ L.tileLayer(`https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=$
 }).addTo(forestMap);
 
 L.geoJSON(baseVectorLayer).addTo(forestMap);
+
+
+const sensors = [{
+        'name': 'S1',
+        'coords': [47.35186394171723, 8.504612532311072]
+    },
+    {
+        'name': 'S2',
+        coords: [47.364261564891635, 8.494116261942045]
+    },
+    {
+        'name': 'S3',
+        coords: [47.3552468562847, 8.499280300778073]
+    }
+];
+
+forestMap.on('click', function(event) {
+    console.log(event.latlng);
+})
+
+sensors.map((sensor) => {
+    L.marker(sensor.coords).addTo(forestMap);
+})
