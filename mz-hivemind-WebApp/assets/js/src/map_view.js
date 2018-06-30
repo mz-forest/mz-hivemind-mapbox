@@ -25,16 +25,19 @@ L
 
 const sensors = [{
         'name': 'S1',
-        'coords': [47.35186394171723, 8.504612532311072]
+        'coords': [47.35186394171723, 8.504612532311072],
+        'datasetID': 'cjj0b21r409fu2qp8gyrohkst',
     },
     {
         'name': 'S2',
-        'deviceID': '',
-        coords: [47.364261564891635, 8.494116261942045]
+        'deviceID': 'ijsdfl',
+        coords: [47.364261564891635, 8.494116261942045],
+        'datasetID': 'cjj0b2aew0ew52wo194n5qki6'
     },
     {
         'name': 'S3',
-        coords: [47.3552468562847, 8.499280300778073]
+        coords: [47.3552468562847, 8.499280300778073],
+        'datasetID': 'cjj0b2lfb0vf72vli0tp0sy3j'
     }
 ];
 
@@ -48,8 +51,45 @@ sensors.map((sensor) => {
     .bindPopup(
         (event) => {
 
-            return `<div>Sensor <b>${sensor.name}</b></div><div>DeviceID ${sensor.deviceID}</div>`
+            return `<div>Sensor <b>${sensor.name}</b></div><div>DeviceID <b>${sensor.deviceID}</b></div>`
         }
     )
     .addTo(forestMap);
 })
+
+/**
+ * Load information about dataset for a specific sensor
+ * @param {object} sensor 
+ */
+function loadMapboxDatasetInfo(sensor) {
+    const username = 'chibi-totoro';
+    const mapboxAPIBaseUrl = 'https://api.mapbox.com/datasets/v1/';
+    const url = `${mapboxAPIBaseUrl}${username}/${sensor.datasetID}?access_token=${MAPBOX_TOKEN}`;
+
+    $
+    .get(url)
+    .then(
+        (data) => {
+            // update dom element
+            $(`.${sensor.name}-data`).text(
+                data.features
+            );
+        },
+        () => {}
+    )
+}
+const loadAllSensorsData = function() {
+    sensors.map(
+        (sensor) => {
+            loadMapboxDatasetInfo(sensor)
+        }
+    )
+};
+
+// initial loading 
+loadAllSensorsData();
+
+let periodicDataUpdate = setInterval(
+    loadAllSensorsData,
+    60000 // every minute
+)
