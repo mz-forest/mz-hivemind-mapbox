@@ -13,7 +13,14 @@ L.tileLayer(`https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=$
     accessToken: MAPBOX_TOKEN
 }).addTo(forestMap);
 
-L.geoJSON(baseVectorLayer).addTo(forestMap);
+// Add basic layer map with polygons for forests
+L
+    .geoJSON(baseVectorLayer)
+    .addTo(forestMap)
+    .bindPopup((event)=>{
+
+        return `BFS: ${event.feature.properties.bfs}, ObjectID: ${event.feature.properties.objectid}`;
+    });
 
 
 const sensors = [{
@@ -36,5 +43,13 @@ forestMap.on('click', function(event) {
 })
 
 sensors.map((sensor) => {
-    L.marker(sensor.coords).addTo(forestMap);
+    L
+    .marker(sensor.coords)
+    .bindPopup(
+        (event) => {
+
+            return `<div>Sensor <b>${sensor.name}</b></div><div>DeviceID ${sensor.deviceID}</div>`
+        }
+    )
+    .addTo(forestMap);
 })
